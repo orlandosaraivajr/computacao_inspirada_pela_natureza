@@ -3,7 +3,6 @@ from funcao_g import g
 
 logging.basicConfig(filename='hill_climbing.log',  filemode='w',  level=logging.DEBUG)
 
-logging.info('So should this')
 
 def hill_climbing(func, x_start, step_size, max_iter):
     x_current = x_start
