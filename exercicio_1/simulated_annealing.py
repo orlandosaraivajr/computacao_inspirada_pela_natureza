@@ -33,14 +33,3 @@ def simulated_annealing(func, x_start, temp, cool_rate, max_iter):
 
     return best_solution, best_score
 
-# Parâmetros do Recozimento Simulado
-x_start = 0.005  # Ponto inicial
-temp = 100.0  # Temperatura inicial
-cool_rate = 0.99  # Taxa de resfriamento
-max_iter = 10000  # Número máximo de iterações
-
-logging.basicConfig(filename='simulated_annealing.log',  filemode='w',  level=logging.DEBUG)
-# Executando o Recozimento Simulado
-x_optimal, y_optimal = simulated_annealing(g, x_start, temp, cool_rate, max_iter)
-
-print(f'Ponto ótimo encontrado em x = {x_optimal}, y = {y_optimal}')
