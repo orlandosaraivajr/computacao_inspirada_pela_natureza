@@ -1,82 +1,88 @@
 import random
+import numpy as np
 
-# Função de aptidão (fitness)
-def fitness(individual):
-    target_pattern = [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1]
-    score = 0
-    for i in range(len(target_pattern)):
-        if individual[i] == target_pattern[i]:
-            score += 1
-    return score
 
-# Função para gerar população inicial
-def generate_population(population_size, chromosome_length):
+# Definindo o alvo (target)
+target = [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1]
+
+# Definindo o tamanho da população e o número máximo de gerações
+population_size = 100
+max_generations = 1000
+
+# Definindo as taxas de crossover e mutação
+crossover_rate = 0.08
+mutation_rate = 0.01
+
+# Função para inicializar a população com indivíduos aleatórios
+def initialize_population(population_size, target_length):
     population = []
     for _ in range(population_size):
-        individual = [random.choice([0, 1]) for _ in range(chromosome_length)]
+        individual = [random.randint(0, 1) for _ in range(target_length)]
         population.append(individual)
     return population
 
-# Função de seleção de pais (roleta)
-def select_parents(population, fitness_scores):
-    total_fitness = sum(fitness_scores)
-    probabilities = [score / total_fitness for score in fitness_scores]
+# Função para calcular o fitness de um indivíduo
+def calculate_fitness(individual, target):
+    fitness = sum([1 for i, j in zip(individual, target) if i == j])
+    return fitness
+
+# Função para selecionar os pais com base no fitness
+def select_parents(population, target):
     parents = []
-    for _ in range(2):
-        r = random.random()
-        cumulative_prob = 0
-        for i, prob in enumerate(probabilities):
-            cumulative_prob += prob
-            if r <= cumulative_prob:
-                parents.append(population[i])
-                break
+    total_fitness = sum([calculate_fitness(individual, target) for individual in population])
+    while len(parents) < 2:
+        candidate = random.choice(population)
+        if random.uniform(0, 1) < calculate_fitness(candidate, target) / total_fitness:
+            parents.append(candidate)
     return parents
 
-# Função de crossover (ponto único)
-def crossover(parent1, parent2):
-    crossover_point = random.randint(1, len(parent1) - 1)
-    child1 = parent1[:crossover_point] + parent2[crossover_point:]
-    child2 = parent2[:crossover_point] + parent1[crossover_point:]
+# Função para realizar o crossover
+def crossover(parents):
+    point = random.randint(1, len(parents[0]) - 1)
+    child1 = parents[0][:point] + parents[1][point:]
+    child2 = parents[1][:point] + parents[0][point:]
     return child1, child2
 
-# Função de mutação (bit flip)
+# Função para realizar a mutação
 def mutate(individual, mutation_rate):
     for i in range(len(individual)):
-        if random.random() < mutation_rate:
+        if random.uniform(0, 1) < mutation_rate:
             individual[i] = 1 - individual[i]
     return individual
 
-# Parâmetros do algoritmo genético
-population_size = 100
-chromosome_length = 12
-mutation_rate = 0.001
-generations = 100
+# Algoritmo genético
+def genetic_algorithm(target, population_size, max_generations, crossover_rate, mutation_rate):
+    population = initialize_population(population_size, len(target))
+    generation = 0
+    while generation < max_generations:
+        population.sort(key=lambda x: calculate_fitness(x, target), reverse=True)
+        best_individual = population[0]
+        if best_individual == target:
+            return generation
+        new_population = [best_individual]
+        while len(new_population) < population_size:
+            parents = select_parents(population, target)
+            if random.uniform(0, 1) < crossover_rate:
+                offspring = crossover(parents)
+                new_population.extend(offspring)
+            else:
+                new_population.extend(parents)
+        population = [mutate(individual, mutation_rate) for individual in new_population]
+        generation += 1
+    return max_generations
 
-# Gerar população inicial
-population = generate_population(population_size, chromosome_length)
+# Executando várias simulações para testar diferentes taxas de crossover e mutação
+num_simulations = 100
+results = []
 
-# Executar as gerações
-for generation in range(generations):
-    # Calcular a aptidão de cada indivíduo na população
-    fitness_scores = [fitness(individual) for individual in population]
+for _ in range(num_simulations):
     
-    # Selecionar pais
-    parents = select_parents(population, fitness_scores)
-    
-    # Realizar crossover e mutação para gerar nova geração
-    new_population = []
-    while len(new_population) < population_size:
-        child1, child2 = crossover(parents[0], parents[1])
-        child1 = mutate(child1, mutation_rate)
-        child2 = mutate(child2, mutation_rate)
-        new_population.extend([child1, child2])
-    
-    # Substituir a população antiga pela nova geração
-    population = new_population
+    generations_needed = genetic_algorithm(target, population_size, max_generations, crossover_rate, mutation_rate)
+#    print(generations_needed)
+    results.append(generations_needed)
 
-# Encontrar o melhor indivíduo na última geração
-best_individual = max(population, key=fitness)
 
-# Imprimir o melhor indivíduo encontrado
-print("Melhor indivíduo encontrado:", best_individual)
-print("Aptidão:", fitness(best_individual))
+print("Número de Simulações: \t\t" + str(num_simulations))
+print("Taxa de CrossOver: \t\t" +  str(crossover_rate))
+print("Taxa de Mutação: \t\t " +  str(mutation_rate))
+print("Número médio de gerações necessárias: ", np.mean(results))

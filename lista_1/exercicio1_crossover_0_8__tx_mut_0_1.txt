@@ -1,0 +1,40 @@
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  7.2
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  7.04
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  8.29
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  8.32
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  7.9
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  7.62
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  8.08
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  6.75
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  8.98
+Número de Simulações: 		100
+Taxa de CrossOver: 		0.8
+Taxa de Mutação: 		 0.1
+Número médio de gerações necessárias:  8.16

@@ -5,8 +5,8 @@ import math
 population_size = 1000
 x_boundaries = (-10, 10)
 y_boundaries = (-10, 10)
-mutation_rate = 0.01
-generations = 500
+mutation_rate = 0.1
+generations = 5000
 
 
 '''
