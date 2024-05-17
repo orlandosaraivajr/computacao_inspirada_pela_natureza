@@ -73,12 +73,12 @@ def main():
         
 
         keys = pygame.key.get_pressed()
-
+        '''
         if keys[pygame.K_w]:
             player1.move_up()
         if keys[pygame.K_s]:
             player1.move_down()
-
+        '''
         if keys[pygame.K_UP]:
             player2.move_up()
         if keys[pygame.K_DOWN]:
@@ -86,6 +86,11 @@ def main():
 
         ball.move()
         
+        if player1.y + player1.width > ball.y:
+            player1.move_up()
+        if player1.y + player1.width < ball.y:
+            player1.move_down()
+
         # Verificar colisão com as paletas dos jogadores
         if ball.x <= player1.x + player1.width and player1.y <= ball.y <= player1.y + player1.height:
             ball.speed_x *= -1
