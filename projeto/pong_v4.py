@@ -1,6 +1,8 @@
 import pygame
 import random
 import pandas as pd
+import numpy as np
+from sklearn.linear_model import Perceptron
 
 # Configurações do jogo
 WIDTH, HEIGHT = 800, 600
@@ -9,35 +11,18 @@ PADDLE_SPEED = 10
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-# Configurações do Dataset a ser criado
-samples = 150
-list_position_x = []
-list_position_y = []
-list_speed_x = []
-list_speed_y = []
-list_up_or_down = [] # 1 = UP, -1 = DOWN
+# Criação do Perceptron
+X =  pd.read_pickle("./features.pkl")
+y =  pd.read_pickle("./targets.pkl")
+perceptron = Perceptron(max_iter=1000, random_state=43)
+perceptron.fit(X, y)
 
-def register_in_dataframe(position_x, position_y, speed_x, speed_y, up_or_down):
-    list_position_x.append(position_x)
-    list_position_y.append(position_y)
-    list_speed_x.append(speed_x)
-    list_speed_y.append(speed_y)
-    list_up_or_down.append(up_or_down)
-    print(len(list_position_x))
-    if len(list_position_x) > samples:
-        data = {'position_x': list_position_x,
-                'position_y': list_position_y,
-                'speed_x': list_position_x,
-                'speed_y': list_position_y
-                }
-        features = pd.DataFrame.from_dict(data)
-        data = {'up_or_down': list_up_or_down}
-        targets = pd.DataFrame.from_dict(data)
-        features.to_pickle("./features.pkl")  
-        targets.to_pickle("./targets.pkl")  
-        pygame.quit()
-        return
-
+def up_or_down(position_x, position_y, speed_x, speed_y):
+    b = np.array([position_x, position_y, speed_x, speed_y])
+    dado = np.ndarray((1,4), buffer=b,dtype=int)
+    up_or_down = perceptron.predict(dado)[0]
+    return up_or_down
+    
 # Classe para representar a bola
 class Ball:
     def __init__(self):
@@ -109,18 +94,11 @@ def main():
         if player1.y + player1.width < ball.y:
             player1.move_down()
 
-        if player2.y + player2.width > ball.y:
-            register_in_dataframe(ball.x, ball.y, ball.speed_x, ball.speed_y, 1)
-            player2.move_up()
-        if player2.y + player2.width < ball.y:
-            #register_in_dataframe(ball.x, ball.y, -1)
-            register_in_dataframe(ball.x, ball.y, ball.speed_x, ball.speed_y, -1)
+        if up_or_down(ball.x, ball.y, ball.speed_x, ball.speed_y) == 1:
+            player2.move_up()    
+        else:
             player2.move_down()
-
-        # if player2.y + player2.width == ball.y:
-            # register_in_dataframe(ball.x, ball.y, 0)
-            # register_in_dataframe(ball.x, ball.y, ball.speed_x, ball.speed_y, 0)
-
+        
         # Verificar colisão com as paletas dos jogadores
         if ball.x <= player1.x + player1.width and player1.y <= ball.y <= player1.y + player1.height:
             ball.speed_x *= -1
