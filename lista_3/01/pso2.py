@@ -8,11 +8,12 @@ def rosenbrock_function(x):
     return (1 - x[:, 0])**2 + 100 * (x[:, 1] - x[:, 0]**2)**2
 
 # Configurações do PSO
-options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-bounds = (np.array([-2, -1]), np.array([2, 3]))
+options = {'c1': 0.015, 'c2': 0.003, 'w': 0.09}
+bounds = (np.array([-5, -5]), np.array([5, 5]))
 
 # Inicializando o otimizador
-optimizer = ps.single.GlobalBestPSO(n_particles=50, dimensions=2, options=options, bounds=bounds)
+# Documentação em https://pyswarms.readthedocs.io/en/latest/api/pyswarms.single.html
+optimizer = ps.single.GlobalBestPSO(n_particles=100, dimensions=2, options=options, bounds=bounds)
 
 # Variáveis para armazenar a trajetória
 position_history = []
